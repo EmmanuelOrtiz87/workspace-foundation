@@ -144,6 +144,23 @@ Protocolo reverse-engineered (port de `HanaokaYuzu/Gemini-API`, Apache-2.0) — 
 (el chat, el CRUD) la app es 100% local. Como no hay API oficial, la UI lo marca como
 experimental.
 
+### Troubleshooting del import
+
+- **Error `ruta desconocida: POST /api/gems/import-gemini`**: el server API corriendo en `:5177`
+  es una **versión vieja** (anterior a v4.1). Reiniciarlo: `npm run app:prompts:stop` +
+  `npm run app:prompts:start` (o matar el PID del puerto 5177 y relanzar).
+- **Error `HeadersOverflowError` / `fetch failed` en el import**: la respuesta de
+  `gemini.google.com/app` trae headers >16KB que rompen el `fetch` nativo de Node 24 (undici).
+  Solución implementada: `httpsFetch()` con `node:https` + `maxHeaderSize: 256KB`.
+- **`No se pudo obtener el access token (SNlM0e). Cookie inválida o expirada.`**: la cookie
+  `__Secure-1PSID` está caducada o fue escrita mal. Google la rota con frecuencia (más rápido
+  con Device Bound Session Credentials de Chrome). Copiar fresca desde DevTools → Application →
+  Cookies → gemini.google.com. Algunas cuentas requieren también `__Secure-1PSIDTS`.
+- **`0 gemas detectadas` / warning**: la cookie es válida pero la cuenta no tiene gemas custom,
+  o las predefinidas de sistema no se importan por diseño.
+- **Diagnóstico**: toda etapa se loguea en `.runtime/prompt-studio/import-gemini.log`
+  (token, batchexecute, frames, gems). Revisarlo ante cualquier fallo.
+
 ## 7. Seguridad / privacidad
 
 - `auth.json`, `gemini-key.json` viven en `.runtime/prompt-studio/` (gitignored).
