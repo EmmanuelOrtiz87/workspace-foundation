@@ -129,6 +129,39 @@ se reintenta automáticamente con la cadena verificada:
 - **Convertir prompt actual en gema**: desde el creador, un botón abre el editor de gema
   precargado con el prompt generado (instrucciones = prompt).
 
+## 5b. UI v4.2 — Gem Space por áreas (split-screen)
+
+Refactor de UX de la vista Gemas: de una sola sección monolítica a **4 áreas separadas**
+(patrón ConfigView de archify):
+
+1. **Conexión y modelo** (card superior, 3 columnas):
+   - *Gemini API*: badge de estado (Conectado · N modelos / Key inválida / Sin key) + input de
+     key inline con validación real.
+   - *Modelo de chat (Gemini)*: selector global de modelo (lista real de `/api/gemini/status`)
+     con opción **Auto** (usa el modelo de cada gema). El override viaja en el body del chat
+     (`model`) y el server lo aplica también al proveedor Gemini (v4.2).
+   - *Cuenta de Google*: sesión activa + logout, o import de gemas por cookie (inline).
+2. **Acciones**: contador de resultados + botones **Convertir prompt actual en gema** y
+   **Nueva gema** (antes mezclados con los conectores).
+3. **Biblioteca de gemas** (columna izquierda, 5/12): búsqueda, filtros origen/categoría,
+   lista en una columna con scroll propio, badge **"en chat"** y highlight de la gema activa.
+4. **Chat** (columna derecha, 7/12, `sticky`): **siempre visible** — no requiere "Probar" y no
+   vive al final de la página. Estado vacío con quick-picks **Sugeridas** (favoritas/recientes),
+   historial por gema en memoria (`Record<gemId, msg[]>`) que sobrevive al cambio de gema,
+   auto-scroll, toggle Stack/Gemini en el header, copiar conversación y limpiar.
+
+Otros cambios v4.2:
+
+- **Editor de gema como modal** (antes inline empujaba la lista) + campo de tags + chips
+  rápidos de modelos Gemini cuando hay key válida.
+- **Bug fix (heredado de v4.1)**: "Nueva gema" no abría el editor (`openGemEditor(null, true)`
+  hacía `setGemEditor(null)`); ahora genera un draft vacío.
+- **Server**: `stackChat` migrado de `spawnSync` (240s bloqueando TODO el event loop — mientras
+  un chat de stack corría, la API entera se congelaba) a `spawn` async con `windowsHide:true`;
+  `findOpencodeBin` cacheado (los probes `--version` también bloqueaban). Timeout conserva
+  respuesta elegante al cliente.
+- Footer/health/package en **4.2.0**.
+
 ## 6. Import real de gemas de Google (v4.1, experimental)
 
 Protocolo reverse-engineered (port de `HanaokaYuzu/Gemini-API`, Apache-2.0) — **no es API oficial**:
