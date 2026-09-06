@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * gemini-browser-import.ts — Import de gemas de la cuenta Gemini usando el navegador real.
  *
@@ -77,11 +78,13 @@ async function main(): Promise<void> {
       return await chromium.launchPersistentContext(profileDir, { headless, args: LAUNCH_ARGS });
     }
   };
-  let context;
+  type PersistentContext = Awaited<ReturnType<typeof chromium.launchPersistentContext>>;
+  let context: PersistentContext | undefined;
   try {
     if (mode === 'login') {
       context = await launch(false);
-      const page = context.pages()[0] ?? (await context.newPage());
+      const loginCtx = context;
+      const page = loginCtx.pages()[0] ?? (await loginCtx.newPage());
       // Formulario de email/contraseña de Google DIRECTO; al terminar redirige a Gemini
       await page.goto(
         'https://accounts.google.com/ServiceLogin?continue=https%3A%2F%2Fgemini.google.com%2Fapp&hl=es',
@@ -89,7 +92,7 @@ async function main(): Promise<void> {
       );
       // Mantener la ventana abierta hasta que el usuario la cierre o timeout de 10 min
       await new Promise<void>((resolve) => {
-        context.on('close', () => resolve());
+        loginCtx.on('close', () => resolve());
         setTimeout(() => resolve(), 600_000); // 10 min timeout
       });
       out({ ok: true, login: true, message: 'Login completado o timeout' });
