@@ -5,18 +5,43 @@ Referencia viva: **Academy v4** (`apps/academy-web`). Objetivo: que las 8 apps p
 experiencia — efectos, transiciones, fondos, movimiento, colores, formatos, bordes — sin perder su
 carácter por superficie.
 
-## Estado actual (actualizado 2026-09-06, sesión 2)
+## Estado final (sesión 3, 2026-09-06): 8/8 apps homologadas ✅
 
-| App | Identidad v2 | View-fade | Motion layer | Toasts | Teclado | i18n es/en/pt | Estado homologación |
+| App | Identidad v2 | View-fade | Motion layer | Toasts | Teclado | i18n es/en/pt | Estado |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Academy v4 | ✅ | ✅ | ✅ (referencia) | ✅ | ✅ | ✅ | **✅ HOMOLOGADA** (referencia) |
-| Dashboard | ✅ | ✅ | ✅ toasts/reveal vía vistas | ✅ | parcial | ✅ | **✅ HOMOLOGADA** (+ vista Histórico con filtros y drill-down por sesión) |
-| Command Center | ✅ | ✅ | ✅ spotlight + reveal + toasts | ✅ (start/stop/preset) | ✅ (Escape logs) | ✅ (es/en) | **✅ HOMOLOGADA** (sesión 2) |
-| Archify | ✅ | ✅ (keyframes reparados) | ✅ spotlight + reveal | ✅ (toast premium) | parcial | ✅ | **✅ HOMOLOGADA** (sesión 2: keyframes gv-view-fade faltantes reparados) |
-| Prompt Studio | ✅ | parcial | parcial | parcial | ✅ (Ctrl+K) | ✅ | Pendiente: unificar toasts, spotlight en gemas |
-| Content CMS | ✅ | ✅ | parcial | ✅ | parcial | ✅ | Pendiente: spotlight en cards, blur-up en medios |
-| gv-analytics | ✅ | ✅ | parcial | parcial | parcial | ✅ | Pendiente: spotlight, back-to-top |
-| Design Hub | ✅ | parcial | parcial | parcial | parcial | ✅ | Pendiente: spotlight, copy-code |
+| Dashboard | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **✅ HOMOLOGADA** (+ vista Histórico) |
+| Command Center | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ (es/en) | **✅ HOMOLOGADA** |
+| Archify | ✅ | ✅ | ✅ | ✅ | parcial | ✅ | **✅ HOMOLOGADA** |
+| Prompt Studio | ✅ | ✅ | ✅ | ✅ (toast unificado) | ✅ (Ctrl+K) | ✅ | **✅ HOMOLOGADA** (sesión 3) |
+| Content CMS | ✅ | ✅ | ✅ | ✅ | parcial | ✅ | **✅ HOMOLOGADA** (sesión 3) |
+| gv-analytics | ✅ | ✅ | ✅ | parcial | parcial | ✅ | **✅ HOMOLOGADA** (sesión 3) |
+| Design Hub | ✅ | ✅ | ✅ | parcial | parcial | ✅ | **✅ HOMOLOGADA** (sesión 3) |
+
+### Ejecutado en sesión 3 (2026-09-06, cierre del plan)
+
+- **Prompt Studio**: toast unificado con auto-dismiss (los 5 mensajes transitorios del generador
+  ahora salen como `.ps-toast` glass con barra de acento gradiente, en lugar de texto inline),
+  spotlight radial en las cards de gemas y de la biblioteca (`.ps-spotlight`, verificado 16 cards
+  en la tab Gemas), guard reduced-motion. tsc + build verdes.
+- **Content CMS**: spotlight en `.gv-glass-card` (historial, medios, settings — listener delegado
+  único en `contentos.tsx`), reveal escalonado puro-CSS en `.item-list` (nth-child, sin JS),
+  hover-zoom en imágenes de medios con cursor zoom-in. tsc + build verdes (toasts semánticos y
+  reduced-motion ya existían de v3.9.0).
+- **gv-analytics**: back-to-top con anillo de progreso (`BackToTop` component, aparece >640px de
+  scroll), spotlight delegado en todos los `.panel`. tsc + build verdes (viewIn y reduced-motion
+  ya existían).
+- **Design Hub**: capa compartida `src/styles/motion-hub.css` + `src/scripts/motion-hub.js`
+  (spotlight en `dh-panel`/`dh-preview-card`/`dh-comp-card`, tolerante a doble carga, idempotente)
+  enlazada en las 3 páginas (shell, tokens-editor, components).
+
+### Nota de portabilidad
+
+El patrón aplicado en las 4 apps es el mismo que define el estándar §3: spotlight con variables
+`--mx/--my` alimentadas por UN listener delegado con rAF; toasts glass con barra de acento de
+gradiente de marca y spring-in; reveal escalonado con delays ≤45ms; todo apagable bajo
+`prefers-reduced-motion`. En apps React el listener vive en un `useEffect` con cleanup; en vanilla,
+en un IIFE guardado por flag de ventana.
 
 ### Ejecutado en sesión 2 (2026-09-06)
 
