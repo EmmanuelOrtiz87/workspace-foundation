@@ -92,9 +92,15 @@ glass, footer mono, `gv-cc-theme` / `gv-cc-lang`, bind loopback, sin dependencia
 
 ## Notas de esta sesión (contexto para la siguiente)
 
+- **Cierre de minors (sesión 4, 2026-09-06)**: analytics YA tenía copy en reportes (botón con
+  i18n `report.copy` — la matriz estaba desactualizada); Design Hub copy-code es N/A (no hay
+  bloques de código `<pre>`, solo `<code>` inline en mensajes); CMS suma Ctrl+K que enfoca la
+  búsqueda del historial (`os-item-search`). Watchtower 124/124 PASS (reparada integridad de
+  Engram: checksums regenerados + reindex RAG). Todo pusheado a origin (develop + main en
+  `757b54ff`).
 - Dashboard: el "native aggregator" dejó cards superiores en skeleton y Agent Activity en "Bridge
   Offline" — estado preexistente a investigar en la próxima sesión de dashboard (no bloquea la
-  homologación).
+  homologación). RESUELTO sesión 2: era el proceso WS stale; el bridge es estado operacional.
 - Las capturas de demo de Academy quedaron regeneradas desde apps vivas: dashboard (home, tracing
   200 trazas, timeline, admin RBAC), CMS (Content OS) y Prompt Studio, vía
   `apps/academy-web/scripts/capture-v4.mjs` con login por API (`GV_DASHBOARD_TOKEN` de env, cookie
