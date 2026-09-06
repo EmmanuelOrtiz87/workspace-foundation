@@ -689,6 +689,11 @@ Normativa completa: `rules/NORMATIVA-DESIGN-SYSTEM.md`. Resumen operativo:
 - **Herramienta visual**: Design Hub (`apps/design-hub`, :8095) — token editor, componentes, assets,
   docs; experimentos en `src/labs/`. Apps desacopladas: cada app copia sus assets (snapshot) y tiene
   `apps/<app>/start.sh|stop.sh` nativos.
+- **Motion & UX standard** (desde 2026-09-06): `docs/design/07-motion-ux-standard.md` + ADR-0031 —
+  vocabulario canónico de efectos (spotlight, reveal-stagger, toasts, lightbox, Ctrl+K, blur-up…),
+  capas CSS (tokens→…→motion) y checklist de adopción. Referencia viva: Academy v4
+  (`apps/academy-web/academy-motion.css`). Plan de homologación por app:
+  `docs/apps/HOMOLOGACION-UX-2026-09-06.md`.
 - `assets/gv-design-system.css` (clases `.gv-*`) CONGELADO en clases; solo `--gv-*` actualizables.
 - Ciclo de cambio de marca: editar `TOKENS-v2.json` → regenerar (build-tokens + gv:tokens) → espejo
   del hub (`apps/design-hub/public/tokens/`) → commits (root + apps repo).
