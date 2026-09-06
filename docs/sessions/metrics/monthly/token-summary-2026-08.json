@@ -1,27 +1,19 @@
 {
-  "generated_at": "2026-09-05T06:40:40.716Z",
+  "generated_at": "2026-09-06T18:00:09.546Z",
   "period": "2026-08",
   "days": 28,
   "totals": {
-    "input": 505405971,
-    "output": 11472599,
-    "total": 516878570,
+    "input": 511459472,
+    "output": 11367301,
+    "total": 522826773,
     "cost": 22.862396505
   },
   "daily_avg": {
-    "input": 18050213,
-    "output": 409736,
-    "total": 18459949
+    "input": 18266410,
+    "output": 405975,
+    "total": 18672385
   },
   "by_day": [
-    {
-      "day": "2026-08-07",
-      "input": 2491293,
-      "output": 387487,
-      "total": 2878780,
-      "cost": 0,
-      "sessions": 13
-    },
     {
       "day": "2026-08-08",
       "input": 69159446,
@@ -232,11 +224,19 @@
     },
     {
       "day": "2026-09-05",
-      "input": 668115,
-      "output": 125473,
-      "total": 793588,
+      "input": 5027866,
+      "output": 336845,
+      "total": 5364711,
       "cost": 0,
-      "sessions": 2
+      "sessions": 6
+    },
+    {
+      "day": "2026-09-06",
+      "input": 4185043,
+      "output": 70817,
+      "total": 4255860,
+      "cost": 0,
+      "sessions": 3
     }
   ],
   "by_model": [
@@ -249,16 +249,16 @@
     },
     {
       "model": "big-pickle",
-      "input": 106225363,
-      "output": 3455294,
-      "total": 109680657,
+      "input": 106266405,
+      "output": 3455908,
+      "total": 109722313,
       "cost": 5.066973399999999
     },
     {
       "model": "deepseek-v4-flash-free",
-      "input": 63763413,
-      "output": 3639608,
-      "total": 67403021,
+      "input": 61272120,
+      "output": 3252121,
+      "total": 64524241,
       "cost": 0
     },
     {
@@ -276,6 +276,13 @@
       "cost": 0
     },
     {
+      "model": "nemotron-3-ultra-free",
+      "input": 11218963,
+      "output": 404328,
+      "total": 11623291,
+      "cost": 0
+    },
+    {
       "model": "glm-5.3-flash",
       "input": 8087540,
       "output": 316424,
@@ -283,10 +290,10 @@
       "cost": 2.2171529249999984
     },
     {
-      "model": "nemotron-3-ultra-free",
-      "input": 6900254,
-      "output": 193570,
-      "total": 7093824,
+      "model": "GLM-5.3-Flash",
+      "input": 3302553,
+      "output": 3588,
+      "total": 3306141,
       "cost": 0
     },
     {
@@ -304,6 +311,13 @@
       "cost": 0
     },
     {
+      "model": "muse-spark-1.3-contributor-free",
+      "input": 2218838,
+      "output": 177258,
+      "total": 2396096,
+      "cost": 0
+    },
+    {
       "model": "qwen3.8-max",
       "input": 2053525,
       "output": 122405,
@@ -315,13 +329,6 @@
       "input": 1944818,
       "output": 12428,
       "total": 1957246,
-      "cost": 0
-    },
-    {
-      "model": "muse-spark-1.3-contributor-free",
-      "input": 1090623,
-      "output": 108665,
-      "total": 1199288,
       "cost": 0
     },
     {
@@ -344,13 +351,6 @@
       "output": 45973,
       "total": 385747,
       "cost": 0.63429368
-    },
-    {
-      "model": "GLM-5.3-Flash",
-      "input": 245725,
-      "output": 1364,
-      "total": 247089,
-      "cost": 0
     },
     {
       "model": "gemma-4-26b-a4b-it",
