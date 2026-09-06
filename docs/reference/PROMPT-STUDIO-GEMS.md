@@ -162,6 +162,36 @@ Otros cambios v4.2:
   respuesta elegante al cliente.
 - Footer/health/package en **4.2.0**.
 
+## 5c. v4.3 — Streaming SSE + historial persistente + filtros combo
+
+**Streaming (Gemini)**: el endpoint `/api/gems/:id/chat` acepta `stream: true` y responde
+`text/event-stream` con eventos `meta` → `delta` (texto progresivo) → `done`/`error`. Server usa
+`:streamGenerateContent?alt=sse` vía **node:https con `maxHeaderSize` 256KB** (los headers de
+Gemini rompen undici — mismo motivo que `httpsFetch`), con fallback de modelos 404/503. El
+frontend parsea el stream y hace update progresivo de la última burbuja; si el stream falla
+cae automáticamente a request/response. **Gotcha crítico**: el `writeHead` del SSE debe incluir
+los headers CORS (`access-control-allow-origin` etc.) que `json()` sí manda — sin ellos el
+fetch cross-origin (5176→5177) rechaza en el cliente, cae al fallback y el server persiste el
+intercambio DOS veces.
+
+**Historial persistente**: tabla `gem_chat_messages` (gem_id, role, content, provider, model,
+created_at + índice). El chat endpoint persiste user+assistant por intercambio (best-effort).
+`GET/DELETE /api/gems/:id/chat/history` para cargar/limpiar; el DELETE de una gema limpia su
+historial. El frontend carga el historial del server la primera vez que se abre el chat de una
+gema en la sesión (`chatLoadedRef`), conserva los histos en memoria, y "Limpiar" borra local +
+server. **Anti doble-submit**: `chatBusyRef` (ref síncrona) además de `chatLoading` (state).
+
+**Filtros combo**: origen y categoría pasan de pills a dos `<select>` compactos en un
+`grid-cols-2` (pedidos explícitos del usuario por espacio), con auto-aplicación al cambiar y
+counts por categoría.
+
+**Provider auto-preferencia**: si la key Gemini es válida, el chat arranca en `gemini`
+(una sola vez por sesión, `providerAutoSet`); big-pickle (opencode-zen) sufre rate limits
+(`AI_RetryError: Rate limit exceeded` verificado en logs de opencode) y su timeout bajó de
+240s a 120s con mensaje de error orientativo en el chat.
+
+**Footer/health/package en 4.3.0.**
+
 ## 6. Import real de gemas de Google (v4.1, experimental)
 
 Protocolo reverse-engineered (port de `HanaokaYuzu/Gemini-API`, Apache-2.0) — **no es API oficial**:
