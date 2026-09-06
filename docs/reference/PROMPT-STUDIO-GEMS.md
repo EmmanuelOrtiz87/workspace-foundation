@@ -192,6 +192,38 @@ counts por categoría.
 
 **Footer/health/package en 4.3.0.**
 
+## 5d. v4.4 — Import 1-click por navegador + Mejorar con IA + búsqueda con ranking
+
+**Import por navegador (la vía simple, sin cookie)**: el bloque "Cuenta de Google" ahora
+ofrece **"Importar desde mi navegador"** como método primario. Usa
+`src/ops/gemini-browser-import.ts` (Playwright + Chromium con perfil persistente en
+`.runtime/prompt-studio/browser-profile`) a través de los endpoints
+`/api/gems/import-browser/status|login|import`:
+
+1. Click → `--check` headless (~10-15s) → ¿el perfil tiene sesión de Google?
+2. Sin sesión → estado guiado: **"Abrir ventana de login"** (Chromium headed, detached — el
+   usuario inicia sesión UNA vez) + **"Reintentar import"**.
+3. Con sesión → `--import` ejecuta el batchexecute DENTRO del navegador real (cookies +
+   fingerprint de Chromium) e inserta las gemas con `origin='imported'` + `google_id` real.
+
+Por qué es la vía correcta: Google rechaza las cookies `__Secure-1PSID` pegadas desde Node
+(fingerprint TLS no-navegador → degrada a guest). El import por navegador es 1-click para el
+usuario; la cookie manual queda como opción avanzada colapsada. Estado UI:
+`idle → checking → need-login / login-launched → importing → done`.
+
+**Mejorar con IA (editor de gemas)**: botón "✨ Mejorar con IA" junto a las instrucciones →
+`POST /api/gems/improve` {instructions, name} → meta-prompt de ingeniería de prompts sobre
+Gemini (`gemini-flash-lite-latest` + FALLBACK_MODELS, temperature 0.4) → devuelve el texto
+mejorado que reemplaza el textarea (guardar aplica; cancelar descarta). Requiere key válida.
+
+**Búsqueda con ranking**: `GET /api/gems?q=` tokeniza la query (máx 6 tokens), matchea por
+LIKE y puntúa en JS — nombre x4, tags x3, descripción x2, instrucciones x1, favoritas +0.5
+(estilo BM25-lite nativo). **Fix**: los filtros de origen/categoría ahora aplican también
+con query activa (antes se ignoraban).
+
+**Otro**: preferencia de proveedor de chat persistida en `localStorage` (`ps-chat-provider`).
+**Footer/health/package en 4.4.0.**
+
 ## 6. Import real de gemas de Google (v4.1, experimental)
 
 Protocolo reverse-engineered (port de `HanaokaYuzu/Gemini-API`, Apache-2.0) — **no es API oficial**:
