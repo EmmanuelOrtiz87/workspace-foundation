@@ -18,6 +18,11 @@ import { newAuditEvent, saveAuditEvent } from '../infrastructure/audit-pipeline.
 import { sessionStart } from '../knowledge/engram-session-bridge.js';
 import { ProcessLock } from './process-lock-manager.js';
 import { getConfigService } from '../config/config-service.js';
+import {
+  healStepScriptPaths as healScriptPathsCore,
+  indexScriptPaths,
+  resolveScriptPath as resolveScriptPathCore,
+} from './script-path-heal.js';
 
 const LOG = createLogger('SESSION-AUTOSTART');
 
@@ -301,11 +306,70 @@ function killProcessTree(child: ChildProcess): void {
   child.kill('SIGTERM');
 }
 
+// ─── Script-path AUTO-HEAL (self-improvement) ────────────────────────────────
+// Core logic lives in ./script-path-heal.ts (pure, unit-testable). This wrapper
+// owns the cached basename index and the audit/log reporting. The pipeline
+// resolves and PERSISTS corrected paths so a healed config never warns again.
+
+let scriptPathIndex: Map<string, string> | null = null;
+
+function getScriptPathIndex(): Map<string, string> {
+  if (!scriptPathIndex) scriptPathIndex = indexScriptPaths(ROOT, join(ROOT, 'src'));
+  return scriptPathIndex;
+}
+
+/** Resolve a configured script path, falling back to a basename lookup. */
+function resolveScriptPath(script: string): string {
+  return resolveScriptPathCore(ROOT, script, getScriptPathIndex());
+}
+
+/**
+ * Auto-heal every enabled step whose script path is missing — resolving the
+ * real file by basename, persisting the correction (with .bak backup + audit)
+ * and reporting any unresolved paths for watchtower monitoring.
+ */
+function healStepScriptPaths(config: PipelineConfig): void {
+  const result = healScriptPathsCore(
+    ROOT,
+    config as Parameters<typeof healScriptPathsCore>[1],
+    {
+      index: getScriptPathIndex(),
+      configPath: CONFIG_PATH,
+      reportPath: join(ROOT, '.runtime', 'autostart-missing-scripts.json'),
+    },
+  );
+
+  for (const p of result.patches) {
+    LOG.warn(`[AUTO-HEAL] Script path corrected: ${p.from} → ${p.to} (step: ${p.id})`);
+  }
+  if (result.persisted > 0) {
+    auditLog(
+      'config.autoheal',
+      'session-autostart',
+      'script_paths',
+      'success',
+      `Auto-healed ${result.persisted} script path(s) in session-autostart config`,
+      {
+        steps: result.patches.map((p) => `${p.id}:${p.from}→${p.to}`),
+        backup: `${CONFIG_PATH}.bak`,
+      },
+    );
+    LOG.info(`[AUTO-HEAL] Persisted ${result.persisted} script path correction(s) to ${CONFIG_PATH}`);
+  }
+  if (result.stillMissing.length > 0) {
+    LOG.warn(
+      `[AUTO-HEAL] Unresolved script paths remain (${result.stillMissing
+        .map((m) => m.id)
+        .join(', ')}) → .runtime/autostart-missing-scripts.json`,
+    );
+  }
+}
+
 function executeStep(
   step: PipelineStep,
   timeoutMs: number,
 ): Promise<{ success: boolean; error?: string }> {
-  const scriptPath = join(ROOT, step.script);
+  const scriptPath = join(ROOT, resolveScriptPath(step.script));
 
   if (!existsSync(scriptPath)) {
     return Promise.resolve({ success: false, error: `Script not found: ${step.script}` });
@@ -407,7 +471,7 @@ function isScriptRunning(scriptPath: string): boolean {
  * ROBUST DEDUPE: Uses file-based locking with PID validation.
  */
 function startLazyStep(step: PipelineStep): { success: boolean; error?: string } {
-  const scriptPath = join(ROOT, step.script);
+  const scriptPath = join(ROOT, resolveScriptPath(step.script));
   if (!existsSync(scriptPath)) {
     return { success: false, error: `Script not found: ${step.script}` };
   }
@@ -637,6 +701,11 @@ async function main() {
 
   const timeoutConfig = getPipelineTimeouts();
   const config = loadConfig();
+
+  // Self-heal (auto-evaluación/auto-mejora): resolve+persist any step whose
+  // configured script path is missing before the pipeline executes.
+  healStepScriptPaths(config);
+
   const allSteps = config.pipeline.steps.filter((s) => s.enabled === true);
   const steps = allSteps.filter((s) => !s.lazy);
   const lazySteps = allSteps.filter((s) => s.lazy);

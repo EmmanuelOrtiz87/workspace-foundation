@@ -47,6 +47,7 @@ import {
   checkHooks,
   checkConfigs,
   checkToolConfigs,
+  checkMissingScripts,
 } from './watchtower/checks-config';
 import {
   checkSecurity,
@@ -444,6 +445,7 @@ async function runAllChecks() {
     checkHooks,
     checkConfigs,
     checkToolConfigs,
+    checkMissingScripts,
     checkSecurity,
     checkSecretScanner,
     checkCliGuard,
