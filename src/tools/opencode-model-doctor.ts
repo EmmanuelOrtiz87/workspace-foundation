@@ -165,7 +165,7 @@ async function probeCatalog(
   baseURL: string,
   provider: ProviderConfig,
   key: string | null,
-  providerId: string,
+  _providerId: string,
 ): Promise<{ ok: boolean; models: string[]; error?: string; authSource?: string }> {
   const url = `${baseURL.replace(/\/+$/, '')}/models`;
   try {
@@ -196,7 +196,7 @@ async function probeModel(
   baseURL: string,
   modelId: string,
   key: string,
-  providerId: string,
+  _providerId: string,
 ): Promise<ModelProbeResult> {
   const url = `${baseURL.replace(/\/+$/, '')}/chat/completions`;
   const body = {

@@ -383,3 +383,77 @@ export async function checkWebCrawler() {
     addResult('web-crawler', 'health snapshot', 'WARN', 'Not generated yet', 'manual');
   }
 }
+
+// ─── Component: Git History Secrets (advisory scan) ──────────────────────────
+// Scans a recent slice of the full git history (all branches, textual diff) with
+// the stack's native secret-scanner (80 patterns). Findings are ADVISORY (WARN,
+// never blocks) — matches the repo policy for a single-operator private repo;
+// promote to FAIL when collaboration grows (gitleaks in CI stays authoritative).
+
+// ~45MB of textual diff at 150 commits measured locally — a fast advisory sample
+// of recent history; CI gitleaks remains the authoritative full-history gate.
+const HISTORY_SCAN_DEPTH = 150;
+
+export async function checkGitHistorySecrets() {
+  if (!quiet) logger.info('  [History Secrets] Scanning recent git history...');
+  const { runSync } = await import('../run-command.js');
+  const { writeFileSync, rmSync, mkdirSync } = await import('fs');
+  const { tmpdir } = await import('os');
+  const { join } = await import('path');
+  const { spawnSync } = await import('child_process');
+
+  // Ensure the native scanner exists before doing anything.
+  if (!fileExists(join(ROOT, 'src', 'security', 'secret-scanner.ts'))) {
+    addResult('history-secrets', 'advisory history scan', 'WARN', 'secret-scanner module missing', 'manual');
+    return;
+  }
+
+  const dumpPath = join(tmpdir(), `gv-history-dump-${process.pid}.txt`);
+  try {
+    // Materialize a textual diff of recent commits on ALL branches.
+    const log = spawnSync('git', ['log', '--all', '--no-merges', '-p', `-${HISTORY_SCAN_DEPTH}`], {
+      cwd: ROOT,
+      encoding: 'utf-8',
+      maxBuffer: 512 * 1024 * 1024,
+      windowsHide: true,
+      timeout: 90000,
+    });
+    if (log.status !== 0) {
+      addResult('history-secrets', 'advisory history scan', 'WARN', `git log failed: ${log.stderr?.slice(0, 120)}`, 'manual');
+      return;
+    }
+    mkdirSync(join(tmpdir()), { recursive: true });
+    writeFileSync(dumpPath, log.stdout ?? '', 'utf-8');
+
+    const scan = runSync(
+      'node',
+      ['--import', 'tsx', join(ROOT, 'src', 'security', 'secret-scanner-cli.ts'), '--scan', dumpPath, '--json'],
+      { timeout: 90000, cwd: ROOT },
+    );
+    if (scan.status !== 0) {
+      addResult(
+        'history-secrets',
+        'advisory history scan',
+        'WARN',
+        `Scan found potential secrets in recent history — review .runtime/secret-scan-report or the scan output.`,
+        'manual',
+      );
+      return;
+    }
+    addResult('history-secrets', 'advisory history scan', 'PASS', `No secrets in last ${HISTORY_SCAN_DEPTH} commits`, 'ok');
+  } catch (e: unknown) {
+    addResult(
+      'history-secrets',
+      'advisory history scan',
+      'WARN',
+      `scan error: ${e instanceof Error ? e.message.slice(0, 120) : String(e)}`,
+      'manual',
+    );
+  } finally {
+    try {
+      rmSync(dumpPath, { force: true });
+    } catch {
+      /* best-effort cleanup */
+    }
+  }
+}

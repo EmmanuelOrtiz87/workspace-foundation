@@ -57,6 +57,7 @@ import {
   checkCloudConnectors,
   checkWebCrawler,
   checkAgentGovernance,
+  checkGitHistorySecrets,
 } from './watchtower/checks-security';
 import {
   checkTracing,
@@ -459,6 +460,7 @@ async function runAllChecks() {
     checkModelHealth,
     checkWebCrawler,
     checkAgentGovernance,
+    checkGitHistorySecrets,
     checkLoopGuard,
     checkGuardrails,
   ];
