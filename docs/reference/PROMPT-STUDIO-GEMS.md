@@ -224,6 +224,28 @@ con query activa (antes se ignoraban).
 **Otro**: preferencia de proveedor de chat persistida en `localStorage` (`ps-chat-provider`).
 **Footer/health/package en 4.4.0.**
 
+## 5e. v4.5 — Login del import arreglado (feedback de uso real)
+
+Prueba de usuario reveló 3 fallas en el flujo de login, todas corregidas:
+
+1. **La ventana de login abría la landing de Gemini** (sin sesión → página de marketing, el
+   usuario no encontraba dónde loguearse). Ahora abre el **formulario de email/contraseña de
+   Google directo**: `accounts.google.com/ServiceLogin?continue=https://gemini.google.com/app`.
+   Login normal de Google (email + contraseña + 2FA); al terminar redirige a Gemini.
+2. **Chromium de Playwright → Chrome real** (`channel: 'chrome'` con fallback al bundled):
+   Google desconfía del Chromium empaquetado en el login ("Este navegador no es seguro"); el
+   Chrome real del sistema con perfil persistente es indistinguible de un login normal.
+3. **"Reintentar import" estaba `disabled` en estado login-launched** (bug de flujo: no había
+   camino de vuelta). Ahora siempre habilitado + instrucciones explícitas en pantalla +
+   **auto-detección de sesión** cada 15s mientras la ventana está abierta: cuando el usuario
+   cierra la ventana ya logueado, el próximo check encuentra el token y el import corre solo.
+
+**Server**: `runBrowserImport` migrado de `spawnSync` (bloqueaba la API ~10-15s por check) a
+`spawn` async con `windowsHide` — verificado: health responde en 3ms durante un check. El
+estado `login-launched` ignora silenciosamente los errores de perfil lockeado (la ventana de
+login mantiene el lock del perfil hasta cerrarse).
+**Footer/health/package en 4.5.0.**
+
 ## 6. Import real de gemas de Google (v4.1, experimental)
 
 Protocolo reverse-engineered (port de `HanaokaYuzu/Gemini-API`, Apache-2.0) — **no es API oficial**:
