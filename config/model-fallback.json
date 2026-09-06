@@ -1,6 +1,6 @@
 {
   "version": "2.1.0",
-  "description": "Model fallback chains for agent dispatch. Primary inherits the orchestrator session model (opencode/big-pickle). Agent frontmatter no longer pins a model — dynamic inheritance prevents retired-model breakage. Free-tier chain (mimo-v2.5-free, hy3-free) covers quota exhaustion.",
+  "description": "Model fallback chains for agent dispatch. Primary inherits the orchestrator session model (opencode/muse-spark-1.3-contributor-free). Agent frontmatter no longer pins a model — dynamic inheritance prevents retired-model breakage. Free-tier chain (mimo-v2.5-free, hy3-free) covers quota exhaustion.",
   "lastModified": "2026-08-24Tinheritance",
   "modifiedBy": "orchestrator",
   "global": {
@@ -11,67 +11,67 @@
   },
   "agentFallbacks": {
     "ORCHESTRATOR": {
-      "primary": "opencode/big-pickle",
+      "primary": "opencode/muse-spark-1.3-contributor-free",
       "chain": ["opencode/mimo-v2.5-free", "ollama/llama3", "lm-studio2/qwen2.5"],
       "providerPriority": ["opencode", "ollama", "lm-studio2"]
     },
     "BA": {
-      "primary": "opencode/big-pickle",
+      "primary": "opencode/muse-spark-1.3-contributor-free",
       "chain": ["opencode/mimo-v2.5-free", "hy3-free", "ollama/qwen2.5"],
       "providerPriority": ["opencode", "ollama"]
     },
     "SAD": {
-      "primary": "opencode/big-pickle",
+      "primary": "opencode/muse-spark-1.3-contributor-free",
       "chain": ["opencode/mimo-v2.5-free", "hy3-free", "ollama/qwen2.5"],
       "providerPriority": ["opencode", "ollama"]
     },
     "DEV": {
-      "primary": "opencode/big-pickle",
+      "primary": "opencode/muse-spark-1.3-contributor-free",
       "chain": ["opencode/mimo-v2.5-free", "hy3-free", "ollama/qwen2.5"],
       "providerPriority": ["opencode", "ollama"]
     },
     "QA": {
-      "primary": "opencode/big-pickle",
+      "primary": "opencode/muse-spark-1.3-contributor-free",
       "chain": ["opencode/mimo-v2.5-free", "hy3-free", "ollama/qwen2.5"],
       "providerPriority": ["opencode", "ollama"]
     },
     "OPS": {
-      "primary": "opencode/big-pickle",
+      "primary": "opencode/muse-spark-1.3-contributor-free",
       "chain": ["opencode/mimo-v2.5-free", "hy3-free", "ollama/qwen2.5"],
       "providerPriority": ["opencode", "ollama"]
     },
     "GOV": {
-      "primary": "opencode/big-pickle",
+      "primary": "opencode/muse-spark-1.3-contributor-free",
       "chain": ["opencode/mimo-v2.5-free", "hy3-free", "ollama/qwen2.5"],
       "providerPriority": ["opencode", "ollama"]
     },
     "DOC": {
-      "primary": "opencode/big-pickle",
+      "primary": "opencode/muse-spark-1.3-contributor-free",
       "chain": ["ollama/qwen2.5", "ollama/llama3"],
       "providerPriority": ["opencode", "ollama"]
     },
     "SESSION": {
-      "primary": "opencode/big-pickle",
+      "primary": "opencode/muse-spark-1.3-contributor-free",
       "chain": ["ollama/qwen2.5"],
       "providerPriority": ["opencode", "ollama"]
     },
     "PREMORTEM": {
-      "primary": "opencode/big-pickle",
+      "primary": "opencode/muse-spark-1.3-contributor-free",
       "chain": ["opencode/mimo-v2.5-free", "hy3-free", "ollama/qwen2.5"],
       "providerPriority": ["opencode", "ollama"]
     },
     "MKT": {
-      "primary": "opencode/big-pickle",
+      "primary": "opencode/muse-spark-1.3-contributor-free",
       "chain": ["ollama/qwen2.5", "ollama/llama3"],
       "providerPriority": ["opencode", "ollama"]
     },
     "SALES": {
-      "primary": "opencode/big-pickle",
+      "primary": "opencode/muse-spark-1.3-contributor-free",
       "chain": ["ollama/qwen2.5"],
       "providerPriority": ["opencode", "ollama"]
     },
     "FINANCE": {
-      "primary": "opencode/big-pickle",
+      "primary": "opencode/muse-spark-1.3-contributor-free",
       "chain": ["opencode/mimo-v2.5-free", "hy3-free", "ollama/qwen2.5"],
       "providerPriority": ["opencode", "ollama"]
     }
