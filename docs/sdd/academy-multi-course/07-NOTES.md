@@ -54,6 +54,55 @@ window.GV_GLOSSARY['gentle-vanguard'] = [
 | PR 2 (refactor app.js)                  | ⏳ Worker corriendo (background) |
 | PR 3 contenido (ia-fundamentos seed)    | ✅ Estructura + 3 lecciones completas + 7 stubs en working tree (NO commiteado) |
 | Reviewer formal de PR 1                 | ❌ Bloqueado por Token Plan limit (sub-agent verifier no disponible) |
+| Script de validación post-merge         | ✅ `scripts/validate-multi-course.mjs` creado y funcionando |
+
+## Script de validación: `scripts/validate-multi-course.mjs`
+
+Creado por el padre para validar el contrato multi-curso. **Uso**: `node scripts/validate-multi-course.mjs` desde `apps/academy-web/`.
+
+**Estado actual** (corriendo el script antes de PR 2):
+- `ia-fundamentos`: 100% PASS (10 tracks, 10 lessons, 30 glosario, 3 locales)
+- `gentle-vanguard`: 5 FAIL (todas del patrón viejo que arregla PR 2):
+  - `glossary.js` usa `window.GV_GLOSSARY = [...]` en lugar de `window.GV_GLOSSARY['gentle-vanguard'] = [...]`
+  - 12 `content-*.js` usan `window.GV_CONTENT[<trackId>]` en lugar de `window.GV_CONTENT['gentle-vanguard'].lessons.push(...)`
+  - Mismo issue aplica a `tracks.js`
+
+**Acción del worker de PR 2** (CRÍTICO): actualizar los 12 `content-*.js` de gentle-vanguard al patrón nuevo:
+
+```js
+// Antes (patrón viejo):
+window.GV_CONTENT = window.GV_CONTENT || {};
+window.GV_CONTENT['fundamentos'] = {
+  lessons: [ { id: 'que-es-gv', ... }, ... ]
+};
+
+// Después (patrón nuevo):
+window.GV_CONTENT = window.GV_CONTENT || {};
+window.GV_CONTENT['gentle-vanguard'] = window.GV_CONTENT['gentle-vanguard'] || { lessons: [] };
+window.GV_CONTENT['gentle-vanguard'].lessons.push({ id: 'que-es-gv', ... });
+```
+
+Y `glossary.js`:
+```js
+// Antes:
+window.GV_GLOSSARY = [ { term: '...', ... }, ... ];
+
+// Después:
+window.GV_GLOSSARY = window.GV_GLOSSARY || {};
+window.GV_GLOSSARY['gentle-vanguard'] = [ { term: '...', ... }, ... ];
+```
+
+Y `tracks.js`:
+```js
+// Antes:
+window.GV_TRACKS = [ { id: 'fundamentos', ... }, ... ];
+
+// Después:
+window.GV_TRACKS = window.GV_TRACKS || {};
+window.GV_TRACKS['gentle-vanguard'] = [ { id: 'fundamentos', ... }, ... ];
+```
+
+Después de estos cambios, el script debe pasar 0/0 fallas.
 
 ## Próximos pasos
 
