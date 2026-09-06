@@ -742,13 +742,31 @@ export async function phaseCleanup(
           if (killed) ok(`${target.name} process killed`);
         } else if (target.required) {
           // A required daemon should have been running all session. Its absence
-          // is a real problem — surface it instead of hiding it as a SKIP.
-          results.push({
-            phase,
-            status: 'FAIL',
-            detail: `${target.name} was not running at session close (expected a running daemon)`,
-          });
-          warn(`${target.name} was not running at session close`);
+          // is a real problem ONLY when the daemon was never launched this
+          // session. If the inventory says it WAS launched (its lazy step ran)
+          // but it is already gone — e.g. terminated by a previous close stage —
+          // the kill objective is already met: idempotence, do not FAIL a second
+          // consecutive close over the same daemon.
+          const token = target.name.toLowerCase().split(' ')[0];
+          const launchedThisSession =
+            (inventory?.lazyStepsLaunched ?? []).some((id: string) =>
+              id.toLowerCase().includes(token),
+            ) || (inventory?.daemonsStarted ?? []).some((n: string) => n === target.name);
+          if (launchedThisSession) {
+            results.push({
+              phase,
+              status: 'PASS',
+              detail: `${target.name} not running at close (already terminated — kill objective met)`,
+            });
+            ok(`${target.name} was not running (already terminated)`);
+          } else {
+            results.push({
+              phase,
+              status: 'FAIL',
+              detail: `${target.name} was not running at session close (expected a running daemon)`,
+            });
+            warn(`${target.name} was not running at session close`);
+          }
         } else {
           // Optional daemon (e.g. Dashboard WS) legitimately not started.
           results.push({
