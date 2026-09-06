@@ -246,6 +246,34 @@ estado `login-launched` ignora silenciosamente los errores de perfil lockeado (l
 login mantiene el lock del perfil hasta cerrarse).
 **Footer/health/package en 4.5.0.**
 
+## 5f. v4.5.1 — Import REAL de gemas: 3 bugs de parsing resueltos (instrucciones íntegras)
+
+Prueba end-to-end con la cuenta real reveló que el import devolvía **0 gemas** aunque la
+respuesta de Google las contenía. Causas encontradas y corregidas en
+`src/ops/gemini-browser-import.ts`:
+
+1. **Parser length-prefixed roto**: `parseFrames` con regex `(\d+)\n` fallaba en TODOS los
+   frames del batchexecute (formato cambiado) → 0 gems parseadas silenciosamente. Reemplazado
+   por extracción JSON-aware por regex: `\["wrb\.fr","<rpcid>","((?:[^"\\]|\\.)*)"` →
+   `JSON.parse('"' + captura + '"')` para des-escapar el payload. Validado contra respuesta real.
+2. **Instrucciones truncadas**: el RPC de lista (CNgdBe) trae el prompt cortado a ~100 chars
+   (preview) — limitación también presente en la librería de referencia Gemini-API. Descubierto
+   y validado el RPC de detalle **`HcT8bb` con payload `["<gem_id>"]`** que devuelve las
+   instrucciones COMPLETAS (Gemini-API lo define como `GET_BOT` pero no lo usa). El import hace
+   ahora un detalle por gema custom y reemplaza el preview si el texto es mayor.
+3. **Semántica de payloads invertida**: `[4]` devuelve las CUSTOM y `[2]` las del sistema
+   (al revés de lo documentado en Gemini-API). Clasificación estable por forma de id: custom =
+   hex (ej. `36c023573889`), sistema = kebab-case (ej. `canvas-create-infographics`). Solo las
+   custom se importan (el sistema son 60+ y no se editan).
+
+También: `getArg` corregido por `hasFlag` (un flag booleano al final de argv se perdía y el
+modo CLI caía a `check` silenciosamente). Nota tsx: `page.evaluate` falla con
+`__name is not defined` — definir `window.__name = (f) => f` antes.
+
+**Resultado verificado con cuenta real**: 4 gemas custom importadas con instrucciones íntegras
+(5690 / 4224 / 4786 / 2891 chars — antes 100 truncados). La sesión del perfil quedó válida del
+intento de login del usuario: no hace falta re-loguearse.
+
 ## 6. Import real de gemas de Google (v4.1, experimental)
 
 Protocolo reverse-engineered (port de `HanaokaYuzu/Gemini-API`, Apache-2.0) — **no es API oficial**:
