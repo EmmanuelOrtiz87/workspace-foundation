@@ -274,6 +274,45 @@ modo CLI caía a `check` silenciosamente). Nota tsx: `page.evaluate` falla con
 (5690 / 4224 / 4786 / 2891 chars — antes 100 truncados). La sesión del perfil quedó válida del
 intento de login del usuario: no hace falta re-loguearse.
 
+## 5g. v4.6 — Auditoría de rendimiento/UX: 11 mejoras
+
+Auditoría con mediciones reales (latencias por endpoint, revisión de tema claro en browser,
+inventario de features dormidas). Implementado:
+
+**Latencia:**
+1. **Cache de `/api/gemini/status`** (TTL 5 min, a nivel módulo, invalidado al guardar key):
+   1.2s cold → **6ms cached** (240x). El status validaba la key contra Google en CADA request.
+2. **Debounce 250ms** en las búsquedas de gemas y prompts (antes: 1 request por tecla).
+
+**Data safety (local-first):**
+3. **Export/Import JSON**: `GET /api/data/export` (attachment download) y
+   `POST /api/data/import` (transaccional, upsert por id; las gemas `default` del pool GV NO se
+   sobreescriben con backups). Round-trip verificado: 34.8KB (16 gems + 2 chats). Botones en
+   la sección Acciones.
+
+**Chat (legibilidad + control):**
+4. **Markdown nativo XSS-safe** (`src/Markdown.tsx`, cero dependencias): headings, listas,
+   bold/italic (incluye `_italic_`), inline code, code fences, blockquote, hr, links. Escape
+   de TODO el HTML antes de transformar. Respuestas de Gemini legibles de verdad.
+5. **Input multilinea**: textarea con Enter=enviar, Shift+Enter=nueva línea.
+6. **Botón Parar** (AbortController sobre el stream; marca `(interrumpido)`; NO cae al
+   fallback sin stream — distinción de AbortError en el catch).
+7. **Copiar mensaje individual** (icono en hover por burbuja).
+
+**Features dormidas conectadas:**
+8. **Historial de versiones de gemas en UI**: el server guardaba snapshots desde v4 sin UI.
+   Botón Historial en cards de gemas propias + modal con diff por líneas y restore.
+9. **usage_count**: columna nueva (migración idempotente ALTER TABLE), incrementado en
+   `persistChat`, badge "N usos" en cards y orden "Más usadas" (`?sort=used`).
+
+**Pulido:**
+10. **Tema claro arreglado**: tabla de overrides CSS bajo `[data-theme='light']` remapeando las
+    utilidades slate-* dark que la app usa (patrón dark-first de v1) — sin tocar el canon
+    `.gv-*`. Verificado con captura: cards claras, textos legibles, acentos OK.
+11. **i18n portugués completo** (es/en/pt) + **Ctrl+K** enfoca el buscador de la vista activa.
+
+**Footer/health/package/app_version en 4.6.0.**
+
 ## 6. Import real de gemas de Google (v4.1, experimental)
 
 Protocolo reverse-engineered (port de `HanaokaYuzu/Gemini-API`, Apache-2.0) — **no es API oficial**:
