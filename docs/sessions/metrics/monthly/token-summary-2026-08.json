@@ -1,17 +1,17 @@
 {
-  "generated_at": "2026-09-06T18:00:09.546Z",
+  "generated_at": "2026-09-06T22:32:04.447Z",
   "period": "2026-08",
   "days": 28,
   "totals": {
-    "input": 511459472,
-    "output": 11367301,
-    "total": 522826773,
+    "input": 513456196,
+    "output": 11432912,
+    "total": 524889108,
     "cost": 22.862396505
   },
   "daily_avg": {
-    "input": 18266410,
-    "output": 405975,
-    "total": 18672385
+    "input": 18337721,
+    "output": 408318,
+    "total": 18746040
   },
   "by_day": [
     {
@@ -232,11 +232,11 @@
     },
     {
       "day": "2026-09-06",
-      "input": 4185043,
-      "output": 70817,
-      "total": 4255860,
+      "input": 6181767,
+      "output": 136428,
+      "total": 6318195,
       "cost": 0,
-      "sessions": 3
+      "sessions": 7
     }
   ],
   "by_model": [
@@ -249,9 +249,9 @@
     },
     {
       "model": "big-pickle",
-      "input": 106266405,
-      "output": 3455908,
-      "total": 109722313,
+      "input": 106690772,
+      "output": 3512588,
+      "total": 110203360,
       "cost": 5.066973399999999
     },
     {
@@ -291,9 +291,9 @@
     },
     {
       "model": "GLM-5.3-Flash",
-      "input": 3302553,
-      "output": 3588,
-      "total": 3306141,
+      "input": 4871146,
+      "output": 6947,
+      "total": 4878093,
       "cost": 0
     },
     {
@@ -340,9 +340,9 @@
     },
     {
       "model": "MiniMax-M3",
-      "input": 382389,
-      "output": 24157,
-      "total": 406546,
+      "input": 386153,
+      "output": 29729,
+      "total": 415882,
       "cost": 0
     },
     {
