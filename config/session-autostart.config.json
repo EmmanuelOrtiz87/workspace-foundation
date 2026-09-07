@@ -323,7 +323,7 @@
         "id": "knowledge-base-init",
         "enabled": true,
         "lazy": true,
-        "script": "src/knowledge-base-init.ts",
+        "script": "src/knowledge/knowledge-base-init.ts",
         "args": "--quiet",
         "required": false,
         "description": "Initialize Knowledge Base vault, validate structure, and run full sync with Engram/documents (TS)"
@@ -563,7 +563,7 @@
         "id": "engram-auto-reindex",
         "enabled": true,
         "lazy": true,
-        "script": "src/engram-rag-reindex.ts",
+        "script": "src/knowledge/engram-rag-reindex.ts",
         "args": "--project workspace_gentle_vanguard",
         "required": false,
         "description": "Auto-reindex Engram RAG if older than 24 hours (prevents freshness WARN)"
@@ -590,7 +590,7 @@
         "id": "engram-auto-update",
         "enabled": true,
         "lazy": true,
-        "script": "src/engram-auto-update.ts",
+        "script": "src/knowledge/engram-auto-update.ts",
         "args": "--check-only",
         "required": false,
         "description": "Check for engram updates and install if available â€” validates post-update (auto-evolution)"

@@ -47,6 +47,7 @@ import {
   checkHooks,
   checkConfigs,
   checkToolConfigs,
+  checkMissingScripts,
 } from './watchtower/checks-config';
 import {
   checkSecurity,
@@ -56,6 +57,7 @@ import {
   checkCloudConnectors,
   checkWebCrawler,
   checkAgentGovernance,
+  checkGitHistorySecrets,
 } from './watchtower/checks-security';
 import {
   checkTracing,
@@ -444,6 +446,7 @@ async function runAllChecks() {
     checkHooks,
     checkConfigs,
     checkToolConfigs,
+    checkMissingScripts,
     checkSecurity,
     checkSecretScanner,
     checkCliGuard,
@@ -457,6 +460,7 @@ async function runAllChecks() {
     checkModelHealth,
     checkWebCrawler,
     checkAgentGovernance,
+    checkGitHistorySecrets,
     checkLoopGuard,
     checkGuardrails,
   ];
