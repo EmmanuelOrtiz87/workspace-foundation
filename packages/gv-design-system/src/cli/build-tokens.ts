@@ -34,7 +34,10 @@ const DS_ROOT = join(__dirname, '..', '..');
 const TOKENS_JSON = join(DS_ROOT, 'src', 'tokens', 'tokens.json');
 const SRC_CSS = join(DS_ROOT, 'src', 'tokens', 'tokens.css');
 const SRC_TS = join(DS_ROOT, 'src', 'tokens', 'tokens.ts');
+const SRC_SHELL = join(DS_ROOT, 'src', 'shell', 'shell.css');
 const DIST = join(DS_ROOT, 'dist');
+const RUNTIME_SHELL = join(DS_ROOT, '..', '..', 'assets', 'gv-shell.css');
+const DESIGN_HUB_SHELL = join(DS_ROOT, '..', '..', 'apps', 'design-hub', 'public', 'gv-shell.css');
 
 /** Top-level JSON keys that are package metadata, not tokens. */
 const RESERVED_KEYS = new Set(['$schema', 'version', 'name', 'description', 'mode', 'meta']);
@@ -840,12 +843,19 @@ function main() {
   mkdirSync(DIST, { recursive: true });
   writeFileSync(join(DIST, 'tokens.css'), css);
   writeFileSync(join(DIST, 'components.css'), css);
+  if (!existsSync(SRC_SHELL)) throw new Error(`Shared shell not found: ${SRC_SHELL}`);
+  const shell = readFileSync(SRC_SHELL, 'utf8');
+  writeFileSync(join(DIST, 'shell.css'), shell);
+  writeFileSync(RUNTIME_SHELL, shell);
+  if (existsSync(dirname(DESIGN_HUB_SHELL))) writeFileSync(DESIGN_HUB_SHELL, shell);
   writeFileSync(join(DIST, 'tokens.ts'), ts);
   writeFileSync(join(DIST, 'tailwind.config.ts'), generateTailwindConfig(tokens));
   writeFileSync(join(DIST, 'figma-tokens.json'), generateFigmaTokens(tokens));
   writeFileSync(join(DIST, 'css-modules.d.ts'), generateCssModulesTypes(css));
   writeFileSync(join(DIST, 'tokens.json'), JSON.stringify(tokens, null, 2) + '\n');
-  console.log('✅ dist/tokens.css, components.css, tokens.ts regenerated');
+  console.log('✅ dist/tokens.css, components.css, shell.css, tokens.ts regenerated');
+  console.log(`✅ runtime shell snapshot: ${RUNTIME_SHELL}`);
+  console.log(`✅ Design Hub shell snapshot: ${DESIGN_HUB_SHELL}`);
   console.log(
     '✅ dist/tailwind.config.ts, figma-tokens.json, css-modules.d.ts, tokens.json regenerated',
   );

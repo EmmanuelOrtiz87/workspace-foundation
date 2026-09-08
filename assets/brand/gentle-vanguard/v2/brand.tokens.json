@@ -1,0 +1,31 @@
+{
+  "brand": "Gentle Vanguard",
+  "version": "2.0",
+  "color": {
+    "midnight": "#0B1020",
+    "electricBlue": "#1E40AF",
+    "techCyan": "#06B6D4",
+    "vanguardViolet": "#8B5CF6",
+    "softWhite": "#F8FAFC",
+    "black": "#050A14"
+  },
+  "gradient": {
+    "type": "linear",
+    "direction": "135deg",
+    "stops": [
+      {"offset": 0, "color": "#6E4DEB"},
+      {"offset": 0.52, "color": "#7B63E8"},
+      {"offset": 1, "color": "#06B6D4"}
+    ]
+  },
+  "typography": {
+    "primary": "Inter",
+    "fallback": ["Manrope", "Arial", "sans-serif"],
+    "wordmarkWeight": 800
+  },
+  "icon": {
+    "masterViewBox": "0 0 1024 1024",
+    "safeArea": "15-20%",
+    "recommendedAppIcon": "app-icon-dark.svg"
+  }
+}

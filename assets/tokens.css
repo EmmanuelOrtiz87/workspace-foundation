@@ -1,33 +1,33 @@
 /* Gentle-Vanguard Design Tokens */
 /* Auto-generated from config/brand.json — DO NOT EDIT DIRECTLY */
-/* Generated: 2026-09-07T04:39:01.345Z */
+/* Generated: 2026-09-08T17:54:32.989Z */
 
 :root {
-  --gv-color-primary: #22D3EE;
+  --gv-color-primary: #06B6D4;
   --gv-color-primary-light: #67E8F9;
   --gv-color-primary-dark: #0891B2;
-  --gv-color-accent: #A78BFA;
+  --gv-color-accent: #8B5CF6;
   --gv-color-accent-teal: #0891B2;
-  --gv-color-background: #0F1115;
+  --gv-color-background: #0B1020;
   --gv-color-surface: #151921;
   --gv-color-surface-icon: #1A1F2A;
   --gv-color-circuit: #252B38;
   --gv-color-text-primary: #E8EEF4;
-  --gv-color-text-brand: #22D3EE;
+  --gv-color-text-brand: #06B6D4;
   --gv-color-text-muted: #8B95A8;
   --gv-color-border: #252B38;
   --gv-color-success: #4ADE80;
   --gv-color-warning: #F4BB4F;
   --gv-color-error: #EE6D75;
-  --gv-color-selected: #67E8F9;
+  --gv-color-selected: #06B6D4;
 
   /* CLI Theme */
-  --gv-cli-banner-color: #22D3EE;
+  --gv-cli-banner-color: #06B6D4;
   --gv-cli-subtitle-color: #8B95A8;
   --gv-cli-success-color: #4ADE80;
   --gv-cli-error-color: #EE6D75;
   --gv-cli-warning-color: #F4BB4F;
-  --gv-cli-selected-color: #67E8F9;
+  --gv-cli-selected-color: #06B6D4;
   --gv-cli-override-color: #F4BB4F;
   --gv-cli-muted-color: #8B95A8;
 
@@ -42,11 +42,11 @@
   --gv-letter-spacing-heading: 0.01em;
 
   /* Gradients */
-  --gv-gradient-logo-primary: linear-gradient(135deg, #A78BFA, #22D3EE);
-  --gv-gradient-logo-icon: linear-gradient(135deg, #A78BFA, #22D3EE);
-  --gv-gradient-github-header: linear-gradient(135deg, #A78BFA, #22D3EE);
+  --gv-gradient-logo-primary: linear-gradient(135deg, #6E4DEB, #06B6D4);
+  --gv-gradient-logo-icon: linear-gradient(135deg, #6E4DEB, #06B6D4);
+  --gv-gradient-github-header: linear-gradient(135deg, #6E4DEB, #06B6D4);
 
   /* Brand */
-  --gv-brand-name: "GENTLE-VANGUARD";
-  --gv-brand-tagline: "ADVANCED TECHNOLOGY SOLUTIONS";
+  --gv-brand-name: "GENTLE VANGUARD";
+  --gv-brand-tagline: "APRENDER · EXPERIMENTAR · CONSTRUIR · TRANSFORMAR";
 }

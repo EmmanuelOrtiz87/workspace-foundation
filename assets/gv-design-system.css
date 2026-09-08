@@ -42,17 +42,17 @@
   --gv-selected: #67e8f9;
   --gv-bg-rgb: 15, 17, 21;
   --gv-primary-rgb: 34, 211, 238;
-  --gv-glow: rgba(34, 211, 238, 0.35);
+  --gv-glow: rgba(6, 182, 212, 0.35);
   --gv-font-display: 'Space Grotesk', 'Orbitron', sans-serif;
   --gv-font-body: 'Inter', 'Inter Variable', system-ui, -apple-system, sans-serif;
   --gv-font-mono: 'JetBrains Mono NL', 'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
   --gv-glass: rgba(26, 31, 42, 0.72);
-  --gv-glass-border: rgba(167, 139, 250, 0.24);
+  --gv-glass-border: rgba(139, 92, 246, 0.24);
   --gv-gradient: linear-gradient(
     135deg,
-    #a78bfa 0%,
-    color-mix(in srgb, #a78bfa 50%, #22d3ee) 50%,
-    #22d3ee 100%
+    #6E4DEB 0%,
+    #7B63E8 52%,
+    #06B6D4 100%
   );
   --gv-header-height: 62px;
 }

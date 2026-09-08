@@ -1,0 +1,28 @@
+{
+  "brand": "Gentle Vanguard",
+  "asset_version": "2.0",
+  "format": "SVG",
+  "master": "assets/brand/gentle-vanguard/v2/svg/icons/gv-master-gradient.svg",
+  "app_icon_dark": "assets/brand/gentle-vanguard/v2/svg/icons/app-icon-dark.svg",
+  "logo_horizontal": "assets/brand/gentle-vanguard/v2/svg/logos/logo-horizontal.svg",
+  "safe_area": {
+    "icon_margin_percent": "15-20",
+    "canvas": "1024x1024",
+    "mark_width": "800px"
+  },
+  "colors": {
+    "midnight": "#0B1020",
+    "blue": "#1E40AF",
+    "cyan": "#06B6D4",
+    "violet": "#8B5CF6",
+    "soft_white": "#F8FAFC",
+    "black": "#050A14"
+  },
+  "gradient": [
+    "#6E4DEB",
+    "#7B63E8",
+    "#06B6D4"
+  ],
+  "all_svg_paths": true,
+  "embedded_raster_images": false
+}

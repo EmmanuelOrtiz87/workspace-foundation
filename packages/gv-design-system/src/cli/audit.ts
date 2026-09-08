@@ -32,6 +32,10 @@ if (args.length === 0) {
 }
 
 const target = args[0];
+if (typeof target !== 'string' || target.length === 0) {
+  console.error('Audit target is required.');
+  process.exit(1);
+}
 const json = args.includes('--json');
 const scopeFlag = args.indexOf('--scope');
 const scope = scopeFlag >= 0 ? args[scopeFlag + 1] : null;

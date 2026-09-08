@@ -12,6 +12,7 @@
     },
     "./tokens.css": "./dist/tokens.css",
     "./components.css": "./dist/components.css",
+    "./shell.css": "./dist/shell.css",
     "./react": {
       "types": "./dist/react/index.d.ts",
       "import": "./dist/react/index.js"
@@ -31,6 +32,7 @@
     "dev": "tsc -w -p tsconfig.json",
     "audit": "impeccable detect src/ --json",
     "audit:app": "tsx src/cli/audit.ts",
+    "conformance": "tsx src/cli/conformance.ts",
     "sync": "tsx src/cli/sync.ts",
     "mcp:start": "tsx src/mcp/server.ts"
   },

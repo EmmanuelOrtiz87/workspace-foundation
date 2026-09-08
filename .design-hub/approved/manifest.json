@@ -1,0 +1,44 @@
+[
+  {
+    "name": "gv-master-gradient.svg",
+    "type": "logo",
+    "source": "assets/brand/gentle-vanguard/v2/svg/icons/gv-master-gradient.svg",
+    "target": "assets/logo.svg"
+  },
+  {
+    "name": "gv-transparent.svg",
+    "type": "logo",
+    "source": "assets/brand/gentle-vanguard/v2/svg/icons/gv-transparent.svg",
+    "target": "docs/brand/assets/logo-primary.svg"
+  },
+  {
+    "name": "app-icon-dark.svg",
+    "type": "icon",
+    "source": "assets/brand/gentle-vanguard/v2/svg/icons/app-icon-dark.svg",
+    "target": "assets/logo-icon.svg"
+  },
+  {
+    "name": "gv-white.svg",
+    "type": "mono-light",
+    "source": "assets/brand/gentle-vanguard/v2/svg/icons/gv-white.svg",
+    "target": "assets/logo-mono-light.svg"
+  },
+  {
+    "name": "gv-black.svg",
+    "type": "mono-dark",
+    "source": "assets/brand/gentle-vanguard/v2/svg/icons/gv-black.svg",
+    "target": "assets/logo-mono-dark.svg"
+  },
+  {
+    "name": "favicon.svg",
+    "type": "favicon",
+    "source": "assets/brand/gentle-vanguard/v2/svg/icons/favicon.svg",
+    "target": "apps/design-hub/public/assets/favicon.svg"
+  },
+  {
+    "name": "logo-horizontal.svg",
+    "type": "logo",
+    "source": "assets/brand/gentle-vanguard/v2/svg/logos/logo-horizontal.svg",
+    "target": "docs/brand/assets/logo-v2.svg"
+  }
+]

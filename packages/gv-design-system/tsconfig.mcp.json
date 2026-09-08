@@ -1,8 +1,8 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist/mcp",
-    "rootDir": "./src/mcp",
+    "outDir": "./dist",
+    "rootDir": "./src",
     "jsx": "preserve"
   },
   "include": ["src/mcp/**/*"],

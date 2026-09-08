@@ -1,8 +1,8 @@
 {
-  "_comment": "Gentle-Vanguard Brand Identity System — brand/visual assets config (CLI colors, banners, social). CANON: docs/brand/BRAND-DECISION-2026-09-01.md — v2 Premium + logo v1 monogram. Full design tokens: docs/brand/TOKENS-v2.json. Official logo assets: assets/logo.svg (root).",
+  "_comment": "Gentle-Vanguard Brand Identity System — brand/visual assets config (CLI colors, banners, social). CANON: docs/adr/ADR-0033-nueva-identidad-marca-v3.md — v2.0 APPLICATION FINAL (SVG Asset System v2.0). Full design tokens: assets/brand/gentle-vanguard/v2/brand.tokens.json. Official logo assets: assets/logo.svg (root).",
   "_canon": {
-    "decision": "docs/brand/BRAND-DECISION-2026-09-01.md",
-    "tokens": "docs/brand/TOKENS-v2.json",
+    "decision": "docs/adr/ADR-0033-nueva-identidad-marca-v3.md",
+    "tokens": "assets/brand/gentle-vanguard/v2/brand.tokens.json",
     "brandKit": "docs/brand/BRAND-KIT.md",
     "logoOfficial": "assets/logo.svg",
     "logoVariants": [
@@ -12,46 +12,49 @@
     ]
   },
   "name": "Gentle-Vanguard",
-  "displayName": "GENTLE-VANGUARD",
-  "tagline": "ADVANCED TECHNOLOGY SOLUTIONS",
+  "displayName": "GENTLE VANGUARD",
+  "tagline": "APRENDER · EXPERIMENTAR · CONSTRUIR · TRANSFORMAR",
   "subtitleCLI": "-- NATIVE AI COGNITIVE DEVELOPMENT ECOSYSTEM --",
 
   "colors": {
-    "primary": "#22D3EE",
+    "primary": "#06B6D4",
     "primaryLight": "#67E8F9",
     "primaryDark": "#0891B2",
-    "accent": "#A78BFA",
+    "accent": "#8B5CF6",
     "accentTeal": "#0891B2",
-    "background": "#0F1115",
+    "background": "#0B1020",
     "surface": "#151921",
     "surfaceIcon": "#1A1F2A",
     "circuit": "#252B38",
     "textPrimary": "#E8EEF4",
-    "textBrand": "#22D3EE",
+    "textBrand": "#06B6D4",
     "textMuted": "#8B95A8",
     "border": "#252B38",
     "success": "#4ADE80",
     "warning": "#F4BB4F",
     "error": "#EE6D75",
-    "selected": "#67E8F9"
+    "selected": "#06B6D4"
   },
 
   "gradients": {
     "logoPrimary": {
-      "from": "#A78BFA",
-      "to": "#22D3EE",
+      "from": "#6E4DEB",
+      "mid": "#7B63E8",
+      "to": "#06B6D4",
       "direction": "diagonal",
-      "use": "Official GV monogram (v1 form, v2 gradient) — assets/logo.svg"
+      "use": "Official GV monogram v2.0 (centered) — assets/logo.svg"
     },
     "logoIcon": {
-      "from": "#A78BFA",
-      "to": "#22D3EE",
+      "from": "#6E4DEB",
+      "mid": "#7B63E8",
+      "to": "#06B6D4",
       "direction": "diagonal",
       "use": "Favicon / icon variant — assets/logo-icon.svg"
     },
     "githubHeader": {
-      "from": "#A78BFA",
-      "to": "#22D3EE",
+      "from": "#6E4DEB",
+      "mid": "#7B63E8",
+      "to": "#06B6D4",
       "direction": "diagonal",
       "use": "GitHub repository header logo"
     }
@@ -75,7 +78,7 @@
   "logo": {
     "primary": "assets/logo.svg",
     "icon": "assets/logo-icon.svg",
-    "favicon": "assets/logo-icon.svg",
+    "favicon": "docs/brand/assets/favicon.svg",
     "monoLight": "assets/logo-mono-light.svg",
     "monoDark": "assets/logo-mono-dark.svg",
     "bannerDocs": "docs/brand/assets/banner-docs.svg",
@@ -102,16 +105,16 @@
   },
 
   "cli": {
-    "bannerColor": "#22D3EE",
+    "bannerColor": "#06B6D4",
     "subtitleColor": "#8B95A8",
     "successColor": "#4ADE80",
     "errorColor": "#EE6D75",
     "warningColor": "#F4BB4F",
-    "selectedColor": "#67E8F9",
+    "selectedColor": "#06B6D4",
     "overrideColor": "#F4BB4F",
     "mutedColor": "#8B95A8"
   },
 
-  "version": "2.0.0",
-  "updatedAt": "2026-09-02"
+  "version": "2.1.0",
+  "updatedAt": "2026-09-08"
 }
