@@ -25,6 +25,7 @@
  *   session     Manage session lifecycle (start|stop|status)
  *   dashboard   Control dashboard (start|stop|restart|status)
  *   cc          Command Center: app lifecycle (start|stop|status)
+ *   proposals   Brand proposals: list|propagate|status (--dry-run)
  *   cleanup     Kill zombie processes
  *   status      Show complete stack status
  *   fix         Fix PS1 references (--configs, --dry-run)
@@ -95,6 +96,7 @@ COMMANDS:
   session     Manage session lifecycle (start|stop|status)
   dashboard   Control dashboard (start|stop|restart|status)
   cc          Command Center: app lifecycle (start|stop|status)
+  proposals   Brand proposals: list|propagate|status (--dry-run)
   cleanup     Kill zombie processes
   status      Show complete stack status
   fix         Fix PS1 references (--configs, --dry-run)
@@ -501,6 +503,69 @@ function cmdCc(args: string[]): CommandResult {
           ? `Command Center running: http://127.0.0.1:${ccPort()}/`
           : 'Command Center not running',
       };
+    }
+  }
+}
+
+function cmdProposals(args: string[]): CommandResult {
+  const subcmd = args[0] || 'status';
+  const manifestPath = join(ROOT, '.design-hub', 'approved', 'manifest.json');
+
+  switch (subcmd) {
+    case 'list': {
+      if (!existsSync(manifestPath)) {
+        return { success: false, message: 'No propagation manifest found at .design-hub/approved/manifest.json' };
+      }
+      try {
+        const manifest = JSON.parse(readFileSync(manifestPath, 'utf-8'));
+        if (!Array.isArray(manifest)) {
+          return { success: false, message: 'Invalid manifest: expected an array' };
+        }
+        console.log('📦 Approved assets (propagation manifest):');
+        console.log('');
+        manifest.forEach((entry: { name?: string; type?: string; source?: string; target?: string }, i: number) => {
+          console.log(`  ${i + 1}. ${entry.name ?? 'unnamed'} (${entry.type ?? 'unknown'})`);
+          console.log(`     ${entry.source ?? '?'} → ${entry.target ?? '?'}`);
+        });
+        console.log('');
+        return { success: true, message: `${manifest.length} approved assets listed` };
+      } catch (e) {
+        return { success: false, message: `Failed to read manifest: ${e}` };
+      }
+    }
+    case 'propagate': {
+      const dryRun = args.includes('--dry-run');
+      const r = runSync(
+        process.execPath,
+        ['apps/design-hub/tools/propagate.js', ...(dryRun ? ['--dry-run'] : [])],
+        { timeout: 30000, stdio: 'pipe', cwd: ROOT },
+      );
+      if (r.stdout) console.log(r.stdout);
+      if (r.stderr) console.error(r.stderr);
+      const ok = !r.error && r.status === 0;
+      return { success: ok, message: ok ? 'Propagation complete' : 'Propagation failed' };
+    }
+    case 'status':
+    default: {
+      const officialLogo = join(ROOT, 'assets', 'logo.svg');
+      const manifestExists = existsSync(manifestPath);
+      let manifestCount = 0;
+      if (manifestExists) {
+        try {
+          const manifest = JSON.parse(readFileSync(manifestPath, 'utf-8'));
+          if (Array.isArray(manifest)) manifestCount = manifest.length;
+        } catch {}
+      }
+      console.log('🎨 Brand Identity Status');
+      console.log('────────────────────────');
+      console.log(`  Official identity: v2.0 APPLICATION FINAL (SVG Asset System v2.0)`);
+      console.log(`  ADR:              ADR-0033 (accepted 2026-09-08)`);
+      console.log(`  Official logo:    ${officialLogo.replace(ROOT + '\\', '')} (${existsSync(officialLogo) ? 'present' : 'MISSING'})`);
+      console.log(`  Propagation:      ${manifestExists ? `${manifestCount} assets in manifest` : 'no manifest'}`);
+      console.log(`  Brand Editor:     http://127.0.0.1:8095/src/v3-editor/`);
+      console.log(`  Proposals:        http://127.0.0.1:8095/src/proposals/`);
+      console.log('');
+      return { success: true, message: 'Brand identity status shown' };
     }
   }
 }
@@ -923,6 +988,13 @@ async function main(): Promise<void> {
 
     case 'cc': {
       const r = cmdCc(args.slice(1));
+      if (r.message) console.log(r.message);
+      process.exit(r.success ? 0 : 1);
+      break;
+    }
+
+    case 'proposals': {
+      const r = cmdProposals(args.slice(1));
       if (r.message) console.log(r.message);
       process.exit(r.success ? 0 : 1);
       break;
