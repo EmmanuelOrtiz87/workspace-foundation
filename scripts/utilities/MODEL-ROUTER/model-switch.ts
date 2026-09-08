@@ -28,6 +28,7 @@ import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..', '..', '..');
 const GLOBAL_OPENCODE_CONFIG = join(homedir(), '.config', 'opencode', 'opencode.json');
+const GLOBAL_OPENCODE_AUTH = join(homedir(), '.local', 'share', 'opencode', 'auth.json');
 const PROJECT_OPENCODE_CONFIG = join(ROOT, 'opencode.json');
 const ACTIVE_MODEL_STATE = join(ROOT, '.runtime', 'model-active.json');
 
@@ -62,10 +63,17 @@ interface ActiveModelState {
 function loadJsonSafe<T>(path: string): T | null {
   try {
     if (!existsSync(path)) return null;
-    return JSON.parse(readFileSync(path, 'utf-8')) as T;
+    return JSON.parse(readFileSync(path, 'utf-8').replace(/^\uFEFF/, '')) as T;
   } catch {
     return null;
   }
+}
+
+function hasProviderAuth(providerId: string, provider: ProviderConfig): boolean {
+  if (provider.options?.apiKey) return true;
+  if (provider.options?.headers && Object.values(provider.options.headers).some((v) => String(v).length > 3)) return true;
+  const auth = loadJsonSafe<Record<string, { key?: string }>>(GLOBAL_OPENCODE_AUTH);
+  return Boolean(auth?.[providerId]?.key);
 }
 
 /**
@@ -139,12 +147,19 @@ function listAvailableModels(): Array<{
       baseURL.includes('localhost') ||
       baseURL.includes('127.0.0.1') ||
       baseURL.includes('192.168.');
-    const hasApiKey = Boolean(
-      provider.options?.apiKey ||
-      (provider.options?.headers &&
-        Object.values(provider.options.headers).some((v) => String(v).length > 3)),
-    );
-    for (const [modelId, model] of Object.entries(provider.models ?? {})) {
+    const hasApiKey = hasProviderAuth(providerKey, provider);
+    const configuredModels = Object.entries(provider.models ?? {});
+    if (configuredModels.length === 0 && provider.options?.baseURL) {
+      models.push({
+        provider: providerKey,
+        model: `${providerKey}/<auto-discovered-model>`,
+        label: 'Auto-discovery enabled (use provider/model)',
+        hasApiKey,
+        local,
+      });
+      continue;
+    }
+    for (const [modelId, model] of configuredModels) {
       models.push({
         provider: providerKey,
         model: `${providerKey}/${model.id ?? model.name ?? modelId}`,
@@ -178,8 +193,7 @@ function detectCapability(): {
       baseURL.includes('127.0.0.1') ||
       baseURL.includes('192.168.');
     const hasApiKey = Boolean(
-      p.options?.apiKey ||
-      (p.options?.headers && Object.values(p.options.headers).some((v) => String(v).length > 3)),
+      hasProviderAuth(name, p),
     );
     return { name, models: Object.keys(p.models ?? {}).length, hasApiKey, local };
   });
@@ -216,18 +230,26 @@ function switchModel(modelRef: string): { ok: boolean; message: string; backup?:
       return { ok: false, message: `Config global no encontrada: ${GLOBAL_OPENCODE_CONFIG}` };
     }
 
+    const config = getEffectiveConfig();
+
     // Validate the requested model exists among available ones
     const available = listAvailableModels().map((m) => m.model);
     const exact = available.includes(modelRef);
     const bySuffix = available.find((m) => m.toLowerCase().endsWith(modelRef.toLowerCase()));
 
-    if (!exact && !bySuffix) {
+    const dynamicProviderMatch = modelRef.match(/^([^/]+)\/(.+)$/);
+    const dynamicProvider = dynamicProviderMatch && config.provider?.[dynamicProviderMatch[1]];
+    const acceptsDynamicModel = Boolean(
+      dynamicProviderMatch && dynamicProvider && Object.keys(dynamicProvider.models ?? {}).length === 0,
+    );
+
+    if (!exact && !bySuffix && !acceptsDynamicModel) {
       return {
         ok: false,
         message: `Modelo "${modelRef}" no encontrado. Usa "npm run model:list" para ver los disponibles.`,
       };
     }
-    const resolved: string = exact ? modelRef : (bySuffix as string);
+    const resolved: string = exact ? modelRef : bySuffix ?? modelRef;
 
     // Backup global config
     const backupPath = join(ROOT, '.runtime', 'backups', `opencode.json.bak-${Date.now()}`);

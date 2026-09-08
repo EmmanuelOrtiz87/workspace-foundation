@@ -121,14 +121,14 @@
   },
   "routingRules": {
     "orchestrator": {
-      "primary": "opencode-go/gpt-5.6-luna",
+      "primary": "opencode/deepseek-v4-flash-free",
       "fallbackStrategy": "availability",
       "maxSwitchPerHour": 3
     },
     "subagents": {
       "inheritFromOrchestrator": true,
       "allowOverride": true,
-      "default": "opencode-go/gpt-5.6-luna",
+      "default": "opencode/deepseek-v4-flash-free",
       "fallbackChain": [
         "opencode/mimo-v2.5-free",
         "ollama/qwen2.5-coder:14b"

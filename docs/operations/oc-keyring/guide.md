@@ -34,11 +34,15 @@ oc-keyring status     # vault + auth.json + active
 oc-keyring which      # solo la cuenta activa
 ```
 
-### Agregar Cuenta B (Zen o Go)
+### Agregar Cuenta B o C (Zen o Go)
 
 ```powershell
 oc-keyring add zen B sk-Vw71cfP9uRFVwNRj3mj1t3u6dHjjSIRUXMD5ice00Z28hLBTBQKyRIaKp9q1XZSb
 oc-keyring add go  B sk-Abc123ExampleKeyForOtherAccount...XYZ
+
+# Cuenta C (Gentle-Vanguard), sin dejar la clave escrita en el historial:
+oc-keyring add zen C (Read-Host 'API key Zen C')
+oc-keyring add go  C (Read-Host 'API key Go C')
 ```
 
 - Letra `A-Z` (case-insensitive). Misma letra = misma cuenta entre zen y go.
@@ -90,8 +94,8 @@ oc-keyring open    # abre accounts.json en el editor default
 {
   "version": 1,
   "accounts": {
-    "zen": { "A": "sk-...", "B": "sk-..." },
-    "go": { "A": "sk-...", "B": "sk-..." }
+    "zen": { "A": "sk-...", "B": "sk-...", "C": "sk-..." },
+    "go": { "A": "sk-...", "B": "sk-...", "C": "sk-..." }
   },
   "active": { "zen": "A", "go": "A" }
 }
@@ -99,7 +103,7 @@ oc-keyring open    # abre accounts.json en el editor default
 
 ## Cómo se ve en OpenCode Desktop
 
-Después de configurar, el picker de modelos muestra **4 grupos nuevos**:
+Después de configurar, el picker de modelos muestra **6 grupos nuevos**:
 
 | Provider ID          | Nombre en picker        | Modelos                                      |
 | -------------------- | ----------------------- | -------------------------------------------- |
@@ -107,6 +111,8 @@ Después de configurar, el picker de modelos muestra **4 grupos nuevos**:
 | `opencode-zen-B/<m>` | OpenCode Zen · Cuenta B | (mismos)                                     |
 | `opencode-go-A/<m>`  | OpenCode Go · Cuenta A  | gpt-5.6-luna, minimax-m3, kimi-k3, ...       |
 | `opencode-go-B/<m>`  | OpenCode Go · Cuenta B  | (mismos)                                     |
+| `opencode-zen-C/<m>` | OpenCode Zen · Cuenta C · Gentle-Vanguard | (catálogo auto-descubierto) |
+| `opencode-go-C/<m>`  | OpenCode Go · Cuenta C · Gentle-Vanguard | (catálogo auto-descubierto) |
 
 Elegir otro = cambiar de cuenta. Instantáneo, sin copy/paste, sin reinicio.
 

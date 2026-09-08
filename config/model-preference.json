@@ -1,8 +1,8 @@
 {
   "$schema": "./model-preference-schema.json",
-  "preferredModel": "opencode-go/gpt-5.6-luna",
-  "preferredProvider": "opencode-go",
+  "preferredModel": "opencode-zen-A/big-pickle",
+  "preferredProvider": "opencode-zen-A",
   "fallbackModel": "opencode/mimo-v2.5-free",
   "policy": "Use the active subscription model when healthy; fallback to the free model only on provider failure.",
-  "updatedAt": "2026-08-20"
+  "updatedAt": "2026-09-07"
 }
